@@ -11,19 +11,23 @@
                  <Title text="Requisition #{requisitionHeaderID}" level="H2"/>
                  <ObjectStatus text="Status: {status}" state="{= ${status} === 'Pending Approval' ? 'Warning' : 'Information' }" class="sapUiSmallMarginBottom"/>
                  
-                 <f:SimpleForm editable="false" layout="ResponsiveGridLayout" title="Header Details">
+                 <f:SimpleForm editable="false" layout="ResponsiveGridLayout" title="Header Details" columnsM="2" columnsL="2" columnsXL="2">
                     <f:content>
+                        <core:Title text="General Info" />
                         <Label text="Requestor"/>
                         <Text text="{requestor}"/>
-                        
-                        <Label text="Selected Vendor"/>
-                        <Text text="{selectedVendor}"/>
-                        
-                        <Label text="Total Value"/>
-                        <Text text="{totalValue} {view>/currencyCode}"/>
-                        
                         <Label text="Created At"/>
                         <Text text="{createdAt}"/>
+
+                        <core:Title text="Financials" />
+                        <Label text="Selected Vendor"/>
+                        <Text text="{selectedVendor}"/>
+                        <Label text="Total Value"/>
+                        <ObjectNumber number="{
+                            parts: [{path: 'totalValue'}, {path: 'view>/currencyCode'}],
+                            type: 'sap.ui.model.type.Currency',
+                            formatOptions: { showMeasure: false }
+                        }" unit="{view>/currencyCode}" state="Success" />
                     </f:content>
                 </f:SimpleForm>
             </VBox>
@@ -47,9 +51,13 @@
                 <items>
                     <ColumnListItem>
                         <cells>
-                            <Text text="{materialName}"/>
+                            <ObjectIdentifier title="{materialName}"/>
                             <Text text="{quantity}"/>
-                            <Text text="{price}"/>
+                             <ObjectNumber number="{
+                                parts: [{path: 'price'}, {path: 'view>/currencyCode'}],
+                                type: 'sap.ui.model.type.Currency',
+                                formatOptions: { showMeasure: false }
+                            }" unit="{view>/currencyCode}" />
                             <Text text="{costCenter}"/>
                         </cells>
                     </ColumnListItem>

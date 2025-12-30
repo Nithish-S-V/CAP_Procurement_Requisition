@@ -83,6 +83,7 @@ sap.ui.define([
                     status: "Created", // Initial Status
                     totalValue: fTotal,
                     selectedVendor: aItems[0].vendorId ? (aItems[0].vendorId === "A" ? "Vendor A" : "Vendor B") : "Manual",
+                    IsActiveEntity: true, // Required for draft-enabled entities
                     items: []
                 };
 
@@ -92,7 +93,8 @@ sap.ui.define([
                         materialName: item.productName,
                         quantity: item.quantity,
                         price: item.price,
-                        costCenter: item.costCenter || sGlobalCostCenter // Use individual or global
+                        costCenter: item.costCenter || sGlobalCostCenter, // Use individual or global
+                        IsActiveEntity: true // Required for deep insert into draft-enabled entity
                     });
                 });
 
