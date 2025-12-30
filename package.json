@@ -26,6 +26,11 @@
     },
     "private": true,
     "cds": {
+        "features": {
+            "fiori": {
+                "bypass_draft": true
+            }
+        },
         "requires": {
             "[production]": {
                 "db": "hana",

@@ -118,6 +118,7 @@ sap.ui.define([
                         requisitionId: sID
                     });
                 }.bind(this)).catch(function (oError) {
+                    console.error("Creation Error:", oError);
                     MessageBox.error("Error creating requisition: " + oError.message);
                 });
             }
