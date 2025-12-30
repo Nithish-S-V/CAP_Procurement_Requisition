@@ -96,14 +96,11 @@ sap.ui.define([
                 });
 
                 // Create
-                oListBinding.create(oData).created().then(function (oCreatedContext) {
-                    var sRequisitionId = oCreatedContext.getProperty("requisitionHeaderID"); // Adjust property name if needed
-                    // Actually, V4 create returns the context immediately, but we wait for 'created()' promise for server confirmation.
-                    // The ID might be generated on server (UUID). 
-                    // Let's reload or get the ID from the context.
+                var oContext = oListBinding.create(oData);
 
-                    // Since default ID is UUID, it should be available.
-                    var sID = oCreatedContext.getProperty("ID");
+                oContext.created().then(function () {
+                    // Success: The context is now updated with server data
+                    var sID = oContext.getProperty("ID");
 
                     MessageBox.success("Requisition Generated Successfully. ID: " + sID);
 
