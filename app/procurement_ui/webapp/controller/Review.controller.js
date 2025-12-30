@@ -18,7 +18,8 @@ sap.ui.define([
                 oRouter.getRoute("RouteReview").attachPatternMatched(this._onObjectMatched, this);
 
                 var oViewModel = new JSONModel({
-                    currencyCode: "USD"
+                    currencyCode: "USD",
+                    globalCostCenter: ""
                 });
                 this.getView().setModel(oViewModel, "view");
             },
@@ -53,12 +54,24 @@ sap.ui.define([
                 }
             },
 
-            onSubmit: function () {
+            onCostCenterChange: function (oEvent) {
+                // Determine if we need to do anything here. 
+                // The view binding {view>/globalCostCenter} already updates the model.
+                // The list item display uses expression binding to show global if local is missing.
+            },
+
+            onGenerateRequisition: function () {
                 var oCartModel = this.getOwnerComponent().getModel("cart");
                 var aItems = oCartModel.getProperty("/items");
                 var fTotal = oCartModel.getProperty("/total");
+                var sGlobalCostCenter = this.getView().getModel("view").getProperty("/globalCostCenter");
 
                 if (aItems.length === 0) return;
+
+                if (!sGlobalCostCenter) {
+                    MessageToast.show("Please enter a Global Cost Center.");
+                    return;
+                }
 
                 var oModel = this.getView().getModel(); // OData V4 Model
                 var oListBinding = oModel.bindList("/RequisitionHeader");
@@ -66,7 +79,7 @@ sap.ui.define([
                 var oData = {
                     requestor: "Employee User", // Mock user
                     requestType: aItems[0].type, // Just take first item's type or generic
-                    status: "Pending Approval",
+                    status: "Created", // Initial Status
                     totalValue: fTotal,
                     selectedVendor: aItems[0].vendorId ? (aItems[0].vendorId === "A" ? "Vendor A" : "Vendor B") : "Manual",
                     items: []
@@ -78,21 +91,32 @@ sap.ui.define([
                         materialName: item.productName,
                         quantity: item.quantity,
                         price: item.price,
-                        costCenter: item.costCenter || "Default-CC"
+                        costCenter: item.costCenter || sGlobalCostCenter // Use individual or global
                     });
                 });
 
                 // Create
-                oListBinding.create(oData).created().then(function () {
-                    MessageBox.success("Document sent to Manager for Approval.");
+                oListBinding.create(oData).created().then(function (oCreatedContext) {
+                    var sRequisitionId = oCreatedContext.getProperty("requisitionHeaderID"); // Adjust property name if needed
+                    // Actually, V4 create returns the context immediately, but we wait for 'created()' promise for server confirmation.
+                    // The ID might be generated on server (UUID). 
+                    // Let's reload or get the ID from the context.
+
+                    // Since default ID is UUID, it should be available.
+                    var sID = oCreatedContext.getProperty("ID");
+
+                    MessageBox.success("Requisition Generated Successfully. ID: " + sID);
 
                     // Clear Cart
                     oCartModel.setProperty("/items", []);
                     oCartModel.setProperty("/total", 0);
+                    this.getView().getModel("view").setProperty("/globalCostCenter", "");
 
-                    // Nav Home
+                    // Nav to PR Details
                     var oRouter = UIComponent.getRouterFor(this);
-                    oRouter.navTo("RouteHome");
+                    oRouter.navTo("RoutePRDetails", {
+                        requisitionId: sID
+                    });
                 }.bind(this)).catch(function (oError) {
                     MessageBox.error("Error creating requisition: " + oError.message);
                 });

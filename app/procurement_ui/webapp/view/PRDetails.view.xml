@@ -1,0 +1,64 @@
+<mvc:View
+    controllerName="com.procurement.ui.controller.PRDetails"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
+    xmlns:core="sap.ui.core"
+    displayBlock="true">
+    <Page title="Internal Document: Purchase Requisition" showNavButton="true" navButtonPress=".onNavBack">
+        <content>
+            <VBox class="sapUiMediumMargin">
+                 <Title text="Requisition #{requisitionHeaderID}" level="H2"/>
+                 <ObjectStatus text="Status: {status}" state="{= ${status} === 'Pending Approval' ? 'Warning' : 'Information' }" class="sapUiSmallMarginBottom"/>
+                 
+                 <f:SimpleForm editable="false" layout="ResponsiveGridLayout" title="Header Details">
+                    <f:content>
+                        <Label text="Requestor"/>
+                        <Text text="{requestor}"/>
+                        
+                        <Label text="Selected Vendor"/>
+                        <Text text="{selectedVendor}"/>
+                        
+                        <Label text="Total Value"/>
+                        <Text text="{totalValue} {view>/currencyCode}"/>
+                        
+                        <Label text="Created At"/>
+                        <Text text="{createdAt}"/>
+                    </f:content>
+                </f:SimpleForm>
+            </VBox>
+
+            <Table
+                headerText="Items"
+                items="{
+                    path: 'items',
+                     parameters : {
+                        $expand : 'header'
+                    }
+                }"
+                class="sapUiResponsiveMargin"
+                width="auto">
+                <columns>
+                    <Column><Text text="Product Name"/></Column>
+                    <Column><Text text="Quantity"/></Column>
+                    <Column><Text text="Price"/></Column>
+                    <Column><Text text="Cost Center"/></Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{materialName}"/>
+                            <Text text="{quantity}"/>
+                            <Text text="{price}"/>
+                            <Text text="{costCenter}"/>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+            
+             <VBox class="sapUiMediumMargin">
+                 <Button text="Send for Approval" type="Accept" press=".onSendForApproval" enabled="{= ${status} === 'Created' }" width="100%"/>
+             </VBox>
+        </content>
+    </Page>
+</mvc:View>

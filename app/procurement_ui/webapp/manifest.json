@@ -121,6 +121,13 @@
                     "target": [
                         "TargetReview"
                     ]
+                },
+                {
+                    "name": "RoutePRDetails",
+                    "pattern": "prDetails/{requisitionId}",
+                    "target": [
+                        "TargetPRDetails"
+                    ]
                 }
             ],
             "targets": {
@@ -158,6 +165,13 @@
                     "clearControlAggregation": false,
                     "viewId": "Review",
                     "viewName": "Review"
+                },
+                "TargetPRDetails": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "PRDetails",
+                    "viewName": "PRDetails"
                 }
             }
         },

@@ -2,10 +2,23 @@
     controllerName="com.procurement.ui.controller.Review"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
+    xmlns:f="sap.ui.layout.form"
     xmlns:core="sap.ui.core"
     displayBlock="true">
-    <Page title="Review &amp; Submit" showNavButton="true" navButtonPress=".onNavBack">
+    <Page title="Review &amp; Generate Requisition" showNavButton="true" navButtonPress=".onNavBack">
+        <headerContent>
+             <Button icon="sap-icon://cart" text="{= ${cart>/items}.length }" enabled="false"/>
+        </headerContent>
         <content>
+            <VBox class="sapUiMediumMargin">
+                 <f:SimpleForm editable="true" layout="ResponsiveGridLayout" title="Requisition Details">
+                    <f:content>
+                        <Label text="Global Cost Center" required="true"/>
+                        <Input value="{view>/globalCostCenter}" placeholder="e.g., CC-GLOBAL-001" change=".onCostCenterChange"/>
+                    </f:content>
+                </f:SimpleForm>
+            </VBox>
+
             <List
                 headerText="Items in Cart"
                 items="{
@@ -29,6 +42,7 @@
                         <attributes>
                             <ObjectAttribute text="Quantity: {cart>quantity}"/>
                             <ObjectAttribute text="Total: {= ${cart>price} * ${cart>quantity} } {view>/currencyCode}"/>
+                            <ObjectAttribute text="Cost Center: {= ${cart>costCenter} ? ${cart>costCenter} : ${view>/globalCostCenter} }"/>
                         </attributes>
                     </ObjectListItem>
                 </items>
@@ -36,7 +50,7 @@
             
              <VBox class="sapUiMediumMargin">
                  <Title text="Total Value: {cart>/total} {view>/currencyCode}" level="H2" class="sapUiSmallMarginBottom"/>
-                 <Button text="Send to Manager for Approval" type="Accept" press=".onSubmit" enabled="{= ${cart>/items}.length > 0 }" width="100%"/>
+                 <Button text="Generate Requisition" type="Emphasized" press=".onGenerateRequisition" enabled="{= ${cart>/items}.length > 0 }" width="100%"/>
              </VBox>
         </content>
     </Page>
