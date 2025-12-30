@@ -77,25 +77,35 @@ sap.ui.define([
                 var oItem = oEvent.getSource().getBindingContext("catalog").getObject();
 
                 var oCartModel = this.getOwnerComponent().getModel("cart");
-                if (!oCartModel) {
-                    oCartModel = new JSONModel({ items: [], total: 0 });
-                    this.getOwnerComponent().setModel(oCartModel, "cart");
+                // Ensure the items property exists
+                if (!oCartModel.getProperty("/items")) {
+                    oCartModel.setProperty("/items", []);
                 }
 
                 var aItems = oCartModel.getProperty("/items");
 
                 // Add to cart
+                // Add to cart
                 aItems.push({
-                    productId: oItem.vendorCatalogAID || oItem.vendorCatalogBID,
+                    productId: oItem.vendorCatalogAID || oItem.vendorCatalogBID || oItem.ID,
                     productName: oItem.productName,
                     description: oItem.description,
                     price: oItem.unitPrice,
                     quantity: 1, // Default 1
+                    costCenter: "", // Initialize cost center
                     vendorId: this.sCurrentVendorId,
                     type: 'Catalog'
                 });
 
                 oCartModel.setProperty("/items", aItems);
+
+                // Recalculate total immediately to update bindings
+                var fTotal = 0;
+                aItems.forEach(function (item) {
+                    fTotal += (parseFloat(item.price) * item.quantity);
+                });
+                oCartModel.setProperty("/total", fTotal.toFixed(2));
+
                 MessageToast.show("Added to cart: " + oItem.productName);
             },
 
