@@ -82,11 +82,10 @@ sap.ui.define([
                     oCartModel.setProperty("/items", []);
                 }
 
-                var aItems = oCartModel.getProperty("/items");
+                var aItems = oCartModel.getProperty("/items") || [];
 
-                // Add to cart
-                // Add to cart
-                aItems.push({
+                // Add to cart (create new array reference to ensure reactivity)
+                var aNewItems = aItems.concat([{
                     productId: oItem.vendorCatalogAID || oItem.vendorCatalogBID || oItem.ID,
                     productName: oItem.productName,
                     description: oItem.description,
@@ -95,13 +94,13 @@ sap.ui.define([
                     costCenter: "", // Initialize cost center
                     vendorId: this.sCurrentVendorId,
                     type: 'Catalog'
-                });
+                }]);
 
-                oCartModel.setProperty("/items", aItems);
+                oCartModel.setProperty("/items", aNewItems);
 
                 // Recalculate total immediately to update bindings
                 var fTotal = 0;
-                aItems.forEach(function (item) {
+                aNewItems.forEach(function (item) {
                     fTotal += (parseFloat(item.price) * item.quantity);
                 });
                 oCartModel.setProperty("/total", fTotal.toFixed(2));
