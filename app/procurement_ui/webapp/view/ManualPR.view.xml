@@ -23,8 +23,7 @@
                         <Label text="Estimated Price" required="true"/>
                         <Input value="{form>/price}" type="Number" placeholder="0.00" description="{view>/currencyCode}"/>
                         
-                        <Label text="Cost Center" required="true"/>
-                        <Input value="{form>/costCenter}" placeholder="e.g., CC-IT-001"/>
+
 
                         <Label text="Preferred Vendor"/>
                         <ComboBox value="{form>/vendor}" placeholder="Select or type vendor">

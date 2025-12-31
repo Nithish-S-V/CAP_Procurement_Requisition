@@ -22,7 +22,6 @@ sap.ui.define([
                     materialName: "",
                     quantity: 1,
                     price: null,
-                    costCenter: "",
                     vendor: ""
                 });
                 this.getView().setModel(oFormModel, "form");
@@ -44,7 +43,7 @@ sap.ui.define([
                 var oFormModel = this.getView().getModel("form");
                 var oData = oFormModel.getData();
 
-                if (!oData.materialName || !oData.quantity || !oData.price || !oData.costCenter) {
+                if (!oData.materialName || !oData.quantity || !oData.price) {
                     MessageToast.show("Please fill in all required fields.");
                     return;
                 }
@@ -64,7 +63,7 @@ sap.ui.define([
                     description: "Manual Entry from " + (oData.vendor || "Unknown Vendor"),
                     price: parseFloat(oData.price),
                     quantity: parseInt(oData.quantity),
-                    costCenter: oData.costCenter,
+                    costCenter: "", // Use global cost center
                     vendorId: oData.vendor || "Manual", // Use selected vendor
                     type: 'Manual'
                 }]);
@@ -85,7 +84,6 @@ sap.ui.define([
                     materialName: "",
                     quantity: 1,
                     price: null,
-                    costCenter: "",
                     vendor: ""
                 });
             },
