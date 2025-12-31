@@ -32,10 +32,11 @@
                     <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Status"/></Column>
                     <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Total Value"/></Column>
                     <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Vendor"/></Column>
-                    <Column hAlign="End"><Text text="Created At"/></Column>
+                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Created At"/></Column>
+                    <Column hAlign="End"><Text text="Actions"/></Column>
                 </columns>
                 <items>
-                    <ColumnListItem type="Navigation" press=".onPressRequisition">
+                    <ColumnListItem type="Active">
                         <cells>
                             <ObjectIdentifier title="{requisitionHeaderID}"/>
                             <ObjectStatus text="{status}" state="{= ${status} === 'Pending Approval' ? 'Warning' : (${status} === 'Created' ? 'Information' : 'Success') }"/>
@@ -46,6 +47,10 @@
                             }" unit="USD" />
                             <Text text="{selectedVendor}"/>
                             <Text text="{createdAt}"/>
+                            <HBox justifyContent="End">
+                                <Button icon="sap-icon://edit" press=".onEditRequisition" type="Transparent" tooltip="Edit"/>
+                                <Button icon="sap-icon://delete" press=".onDeleteRequisition" type="Transparent" class="sapUiTinyMarginBegin" tooltip="Delete"/>
+                            </HBox>
                         </cells>
                     </ColumnListItem>
                 </items>
