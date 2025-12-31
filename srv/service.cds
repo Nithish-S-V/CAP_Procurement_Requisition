@@ -4,6 +4,7 @@ using { Procurement_Requisition as my } from '../db/schema.cds';
 @requires: 'authenticated-user'
 service procurement_RequisitionSrv {
   @odata.draft.enabled
+  @odata.draft.bypass
   entity RequisitionHeader as projection on my.RequisitionHeader;
   entity RequisitionItem as projection on my.RequisitionItem;
   @odata.draft.enabled

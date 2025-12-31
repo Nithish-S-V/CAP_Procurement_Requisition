@@ -88,8 +88,9 @@ sap.ui.define([
                 };
 
                 // Prepare Items
-                aItems.forEach(function (item) {
+                aItems.forEach(function (item, index) {
                     oData.items.push({
+                        requisitionItemID: "ITEM-" + Date.now() + "-" + index,
                         materialName: item.productName,
                         quantity: item.quantity,
                         price: item.price,
