@@ -82,7 +82,7 @@ sap.ui.define([
                     requestType: aItems[0].type, // Just take first item's type or generic
                     status: "Created", // Initial Status
                     totalValue: fTotal,
-                    selectedVendor: aItems[0].vendorId ? (aItems[0].vendorId === "A" ? "Vendor A" : "Vendor B") : "Manual",
+                    selectedVendor: aItems[0].vendorId === "A" ? "Vendor A" : (aItems[0].vendorId === "B" ? "Vendor B" : (aItems[0].vendorId || "Manual")),
                     IsActiveEntity: true, // Required for draft-enabled entities
                     items: []
                 };
