@@ -27,8 +27,10 @@ sap.ui.define([
                 var sRequisitionId = oEvent.getParameter("arguments").requisitionId;
 
                 // Bind the view to the specific Requisition
-                // Note: ID is a string (UUID), so it must be quoted in the path for OData V4 Binding
-                var sPath = "/RequisitionHeader(" + (sRequisitionId.includes("'") ? sRequisitionId : "'" + sRequisitionId + "'") + ")";
+                // Bind the view to the specific Requisition
+                // Note: For draft-enabled entities, the key includes IsActiveEntity.
+                var sID = sRequisitionId.includes("'") ? sRequisitionId : "'" + sRequisitionId + "'";
+                var sPath = "/RequisitionHeader(ID=" + sID + ",IsActiveEntity=true)";
                 this.getView().bindElement({
                     path: sPath,
                     parameters: {
