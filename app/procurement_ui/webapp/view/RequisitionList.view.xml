@@ -9,7 +9,6 @@
             <Table
                 id="requisitionTable"
                 inset="false"
-                fixedLayout="false"
                 items="{
                     path: '/RequisitionHeader',
                     sorter: [
@@ -23,7 +22,7 @@
                 }"
                 updateFinished=".onUpdateFinished"
                 class="sapUiResponsiveMargin"
-                width="100%">
+                width="auto">
                 <headerToolbar>
                     <OverflowToolbar>
                         <Title text="Requisitions" level="H2"/>
@@ -36,7 +35,7 @@
                     <Column width="10rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Total Value"/></Column>
                     <Column width="10rem" minScreenWidth="Tablet" demandPopin="true"><Text text="Vendor"/></Column>
                     <Column width="12rem" minScreenWidth="Tablet" demandPopin="true"><Text text="Created At"/></Column>
-                    <Column hAlign="End" width="6rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Actions"/></Column>
+                    <Column width="5rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Actions"/></Column>
                 </columns>
                 <items>
                     <ColumnListItem type="Active">
