@@ -36,7 +36,7 @@
                     <Column width="10rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Total Value"/></Column>
                     <Column width="10rem" minScreenWidth="Tablet" demandPopin="true"><Text text="Vendor"/></Column>
                     <Column width="12rem" minScreenWidth="Tablet" demandPopin="true"><Text text="Created At"/></Column>
-                    <Column hAlign="End" width="14rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Actions"/></Column>
+                    <Column hAlign="End" width="16rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Actions"/></Column>
                 </columns>
                 <items>
                     <ColumnListItem type="Active">
@@ -55,8 +55,8 @@
                             <Text text="{selectedVendor}"/>
                             <Text text="{createdAt}"/>
                             <HBox justifyContent="End" alignItems="Center">
-                                <Button text="Generate PO" type="Emphasized" class="sapUiTinyMarginEnd" press=".onGeneratePO" visible="{parts: [{path: 'status'}, {path: 'requisitionHeaderID'}, {path: 'ui>/stockStatus'}], formatter: '.formatter.isPOVisible'}"/>
-                                <Button text="Goods Issue" type="Accept" class="sapUiTinyMarginEnd" press=".onGoodsIssue" visible="{parts: [{path: 'status'}, {path: 'requisitionHeaderID'}, {path: 'ui>/stockStatus'}], formatter: '.formatter.isGoodsIssueVisible'}"/>
+                                <Button text="Generate PO" type="Emphasized" class="sapUiTinyMarginEnd" press=".onGeneratePO" visible="{parts: [{path: 'status'}, {path: 'requisitionHeaderID'}, {path: 'ui>/stockStatus'}], formatter: '.isPOVisible'}"/>
+                                <Button text="Goods Issue" type="Accept" class="sapUiTinyMarginEnd" press=".onGoodsIssue" visible="{parts: [{path: 'status'}, {path: 'requisitionHeaderID'}, {path: 'ui>/stockStatus'}], formatter: '.isGoodsIssueVisible'}"/>
                                 
                                 <MenuButton icon="sap-icon://overflow" type="Transparent" tooltip="More actions">
                                     <menu>
