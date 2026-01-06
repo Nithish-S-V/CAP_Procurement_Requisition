@@ -57,11 +57,12 @@
                             <HBox justifyContent="End" alignItems="Center">
                                 <Button text="Generate PO" type="Emphasized" class="sapUiTinyMarginEnd" press=".onGeneratePO" visible="{parts: [{path: 'status'}, {path: 'requisitionHeaderID'}, {path: 'ui>/stockStatus'}], formatter: '.formatter.isPOVisible'}"/>
                                 <Button text="Goods Issue" type="Accept" class="sapUiTinyMarginEnd" press=".onGoodsIssue" visible="{parts: [{path: 'status'}, {path: 'requisitionHeaderID'}, {path: 'ui>/stockStatus'}], formatter: '.formatter.isGoodsIssueVisible'}"/>
-                                <MenuButton icon="sap-icon://overflow" type="Transparent">
+                                
+                                <MenuButton icon="sap-icon://overflow" type="Transparent" tooltip="More actions">
                                     <menu>
                                         <Menu>
                                             <MenuItem text="Edit" icon="sap-icon://edit" press=".onEditRequisition"/>
-                                            <MenuItem text="Delete" icon="sap-icon://delete" press=".onDeleteRequisition"/>
+                                            <MenuItem text="Delete" icon="sap-icon://delete" press=".onDeleteRequisition" enabled="{= ${status} !== 'Approved' }"/>
                                         </Menu>
                                     </menu>
                                 </MenuButton>
