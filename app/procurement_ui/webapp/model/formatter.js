@@ -41,6 +41,18 @@ sap.ui.define([], function () {
                 default:
                     return "";
             }
+        },
+
+        isPOVisible: function (sStatus, sID, mStockStatus) {
+            if (sStatus !== "Approved") return false;
+            if (!mStockStatus || !sID) return false;
+            return mStockStatus[sID] === "OutOfStock";
+        },
+
+        isGoodsIssueVisible: function (sStatus, sID, mStockStatus) {
+            if (sStatus !== "Approved") return false;
+            if (!mStockStatus || !sID) return false;
+            return mStockStatus[sID] === "InStock";
         }
     };
 });

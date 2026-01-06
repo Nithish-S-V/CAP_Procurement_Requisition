@@ -11,4 +11,5 @@ service procurement_RequisitionSrv {
   entity VendorCatalogA as projection on my.VendorCatalogA;
   @odata.draft.enabled
   entity VendorCatalogB as projection on my.VendorCatalogB;
+  entity Warehouse as projection on my.Warehouse;
 }

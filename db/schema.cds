@@ -42,3 +42,11 @@ entity VendorCatalogB : cuid {
   category: String(100);
 }
 
+@assert.unique: { productID: [productID] }
+entity Warehouse : cuid {
+  productID: String(36) @mandatory;
+  productName: String(100);
+  quantity: Integer;
+  location: String(50);
+}
+
