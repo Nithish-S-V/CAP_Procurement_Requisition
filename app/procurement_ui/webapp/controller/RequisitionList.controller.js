@@ -136,6 +136,10 @@ sap.ui.define([
             });
         },
 
+        onGeneratePO: function () {
+            MessageToast.show("Generate Purchase Order: Under Construction");
+        },
+
         onGoodsIssue: function () {
             MessageToast.show("Goods Issue for Warehouse: Under Construction");
         },
