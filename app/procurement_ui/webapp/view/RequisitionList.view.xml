@@ -20,6 +20,7 @@
                          $expand: 'items' 
                     }
                 }"
+                updateFinished=".onUpdateFinished"
                 class="sapUiResponsiveMargin"
                 width="auto">
                 <headerToolbar>
