@@ -30,12 +30,12 @@
                     </OverflowToolbar>
                 </headerToolbar>
                 <columns>
-                    <Column><Text text="Requisition ID"/></Column>
-                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Status"/></Column>
-                    <Column minScreenWidth="Desktop" demandPopin="true"><Text text="Total Value"/></Column>
-                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Vendor"/></Column>
-                    <Column minScreenWidth="Tablet" demandPopin="true"><Text text="Created At"/></Column>
-                    <Column hAlign="End"><Text text="Actions"/></Column>
+                    <Column width="14rem"><Text text="Requisition ID"/></Column>
+                    <Column width="8rem" minScreenWidth="Tablet" demandPopin="true"><Text text="Status"/></Column>
+                    <Column width="10rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Total Value"/></Column>
+                    <Column width="10rem" minScreenWidth="Tablet" demandPopin="true"><Text text="Vendor"/></Column>
+                    <Column width="12rem" minScreenWidth="Tablet" demandPopin="true"><Text text="Created At"/></Column>
+                    <Column hAlign="End" width="15rem" minScreenWidth="Desktop" demandPopin="true"><Text text="Actions"/></Column>
                 </columns>
                 <items>
                     <ColumnListItem type="Active">
@@ -53,7 +53,7 @@
                             }" unit="USD" />
                             <Text text="{selectedVendor}"/>
                             <Text text="{createdAt}"/>
-                            <HBox justifyContent="End">
+                            <HBox justifyContent="End" fitContainer="false">
                                 <Button text="Generate PO" type="Emphasized" press=".onGeneratePO" visible="{parts: [{path: 'status'}, {path: 'requisitionHeaderID'}, {path: 'ui>/stockStatus'}], formatter: '.formatter.isPOVisible'}" class="sapUiTinyMarginEnd"/>
                                 <Button text="Goods Issue" type="Accept" press=".onGoodsIssue" visible="{parts: [{path: 'status'}, {path: 'requisitionHeaderID'}, {path: 'ui>/stockStatus'}], formatter: '.formatter.isGoodsIssueVisible'}" class="sapUiTinyMarginEnd"/>
                                 
