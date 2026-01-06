@@ -54,13 +54,14 @@
                             }" unit="USD" />
                             <Text text="{selectedVendor}"/>
                             <Text text="{createdAt}"/>
-                            <HBox alignItems="Center" justifyContent="End" wrap="NoWrap">
+                            <OverflowToolbar design="Transparent" width="100%">
+                                <ToolbarSpacer/>
                                 <Button text="Generate PO" type="Emphasized" press=".onGeneratePO" visible="{parts: [{path: 'status'}, {path: 'requisitionHeaderID'}, {path: 'ui>/stockStatus'}], formatter: '.formatter.isPOVisible'}" class="sapUiTinyMarginEnd"/>
                                 <Button text="Goods Issue" type="Accept" press=".onGoodsIssue" visible="{parts: [{path: 'status'}, {path: 'requisitionHeaderID'}, {path: 'ui>/stockStatus'}], formatter: '.formatter.isGoodsIssueVisible'}" class="sapUiTinyMarginEnd"/>
                                 
                                 <Button icon="sap-icon://edit" press=".onEditRequisition" type="Transparent" tooltip="Edit"/>
-                                <Button icon="sap-icon://delete" press=".onDeleteRequisition" type="Transparent" class="sapUiTinyMarginBegin" tooltip="Delete"/>
-                            </HBox>
+                                <Button icon="sap-icon://delete" press=".onDeleteRequisition" type="Transparent" tooltip="Delete"/>
+                            </OverflowToolbar>
                         </cells>
                     </ColumnListItem>
                 </items>
