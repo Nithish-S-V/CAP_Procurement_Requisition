@@ -96,14 +96,22 @@ sap.ui.define([
         },
 
         onPressRequisition: function (oEvent) {
-            var oItem = oEvent.getSource();
-            var oContext = oItem.getBindingContext();
-            var sID = oContext.getProperty("ID"); // Get the UUID
+            // Event is 'selectionChange' from Table
+            var oItem = oEvent.getParameter("listItem");
+            if (!oItem) {
+                // Fallback for some desktop modes or programmatic selection
+                oItem = oEvent.getSource().getSelectedItem();
+            }
 
-            var oRouter = UIComponent.getRouterFor(this);
-            oRouter.navTo("RoutePRDetails", {
-                requisitionId: sID
-            });
+            if (oItem) {
+                var oContext = oItem.getBindingContext();
+                var sID = oContext.getProperty("ID"); // Get the UUID
+
+                var oRouter = UIComponent.getRouterFor(this);
+                oRouter.navTo("RoutePRDetails", {
+                    requisitionId: sID
+                });
+            }
         },
 
         onEditRequisition: function (oEvent) {
