@@ -64,7 +64,7 @@ sap.ui.define([
                     price: parseFloat(oData.price),
                     quantity: parseInt(oData.quantity),
                     costCenter: "", // Use global cost center
-                    vendorId: oData.vendor || "Manual", // Use selected vendor
+                    vendorId: oData.vendor || "33300002", // Default to domestic supplier
                     type: 'Manual'
                 }]);
 

@@ -79,23 +79,33 @@ sap.ui.define([
                 var oData = {
                     requisitionHeaderID: "PR-" + Date.now(), // Generate a unique ID
                     requestor: "Employee User", // Mock user
-                    requestType: aItems[0].type, // Just take first item's type or generic
+                    requestType: aItems[0].type || "Standard",
                     status: "Created", // Initial Status
                     totalValue: fTotal,
-                    selectedVendor: aItems[0].vendorId === "A" ? "Vendor A" : (aItems[0].vendorId === "B" ? "Vendor B" : (aItems[0].vendorId || "Manual")),
+                    // selectedVendor: REMOVED. Map to a default supplier for now since cart doesn't have ID.
+                    supplier_ID: "33300002", // Default to "Domestic UAE Supplier 2" for demo
+                    purchaseGroup_ID: "003", // Default Group
+                    companyCode: "3310",     // Default Company
                     IsActiveEntity: true, // Required for draft-enabled entities
                     items: []
                 };
 
                 // Prepare Items
                 aItems.forEach(function (item, index) {
+                    // Logic to map product name to ID? 
+                    // In real app, cart items should have IDs. 
+                    // For now, we hardcode to the material inputs if name matches, or just default.
+                    var sMaterialID = "TG0011";
+                    if (item.productName && item.productName.includes("High Value")) sMaterialID = "TG0012";
+
                     oData.items.push({
                         requisitionItemID: "ITEM-" + Date.now() + "-" + index,
-                        materialName: item.productName,
+                        material_ID: sMaterialID, // Association
                         quantity: item.quantity,
                         price: item.price,
-                        costCenter: item.costCenter || sGlobalCostCenter, // Use individual or global
-                        IsActiveEntity: true // Required for deep insert into draft-enabled entity
+                        costCenter_ID: sGlobalCostCenter || "33101101", // Default to Financials if empty
+                        plant_ID: "3310", // Default Plant
+                        IsActiveEntity: true
                     });
                 });
 
