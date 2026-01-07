@@ -32,8 +32,11 @@ sap.ui.define([
 
             _onObjectMatched: function (oEvent) {
                 var sRequisitionId = oEvent.getParameter("arguments").requisitionId;
-                var sID = sRequisitionId.includes("'") ? sRequisitionId : "'" + sRequisitionId + "'";
-                var sPath = "/RequisitionHeader(ID=" + sID + ",IsActiveEntity=true)";
+
+                // Ensure ID is clean (remote quotes if double wrapped) but ensure wrapped for String UUID
+                // CAP Node.js w/ SQLite usually expects UUIDs as Strings -> Requires Quotes: (ID='...')
+                var sCleanID = sRequisitionId.replace(/'/g, "");
+                var sPath = "/RequisitionHeader(ID='" + sCleanID + "',IsActiveEntity=true)";
 
                 this.getView().bindElement({
                     path: sPath,
@@ -41,7 +44,14 @@ sap.ui.define([
                         $expand: "items,items/material,items/plant,items/costCenter,supplier,purchaseGroup"
                     },
                     events: {
-                        dataReceived: this._updateActionState.bind(this),
+                        dataReceived: function (oEvent) {
+                            var oError = oEvent.getParameter("error");
+                            if (oError) {
+                                MessageToast.show("Error fetching data: " + oError.message);
+                                return;
+                            }
+                            this._updateActionState();
+                        }.bind(this),
                         change: this._updateActionState.bind(this)
                     }
                 });
