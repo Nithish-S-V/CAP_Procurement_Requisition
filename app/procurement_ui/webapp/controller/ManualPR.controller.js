@@ -147,15 +147,13 @@ sap.ui.define([
                 });
                 oCartModel.setProperty("/total", fTotal.toFixed(2));
 
-                MessageToast.show("Item added to request!");
+                MessageToast.show("Item added! total " + aNewItems.length + " items in cart.");
 
                 // Reset
-                // Trigger mode change logic to clear fields
                 this.onModeChange({ getParameter: () => ({ getKey: () => sMode }) });
                 oModel.setProperty("/quantity", 1);
             },
 
-            // Unused but kept for safe measures or deleted
             onGoToCart: function () {
                 var oRouter = UIComponent.getRouterFor(this);
                 oRouter.navTo("RouteReview");

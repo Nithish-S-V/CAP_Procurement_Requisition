@@ -112,6 +112,7 @@
                 <ToolbarSpacer />
                 <Button type="Reject" text="Cancel" press=".onNavBack" />
                 <Button type="Accept" text="Add to Request" press=".onAddToRequest" />
+                <Button type="Emphasized" text="Review &amp; Submit ({= ${cart>/items}.length })" press=".onGoToCart" />
             </OverflowToolbar>
         </footer>
     </Page>
