@@ -91,16 +91,15 @@ sap.ui.define([
                 };
 
                 // Prepare Items
+                // Prepare Items
                 aItems.forEach(function (item, index) {
-                    // Logic to map product name to ID? 
-                    // In real app, cart items should have IDs. 
-                    // For now, we hardcode to the material inputs if name matches, or just default.
-                    var sMaterialID = "TG0011";
-                    if (item.productName && item.productName.includes("High Value")) sMaterialID = "TG0012";
+                    // Use the material_ID we stored in the cart (if Catalog item)
+                    // If Manual item, this will be null/undefined, which is correct (Manual Flow)
+                    var sMaterialID = item.material_ID || null;
 
                     oData.items.push({
                         requisitionItemID: "ITEM-" + Date.now() + "-" + index,
-                        material_ID: sMaterialID, // Association (might be defaulting to TG0011)
+                        material_ID: sMaterialID,
                         materialDescription: item.productName || item.description, // Snapshot
                         quantity: item.quantity,
                         price: item.price,

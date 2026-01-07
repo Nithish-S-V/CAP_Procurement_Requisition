@@ -14,14 +14,34 @@
             <VBox class="sapUiMediumMargin">
                 <f:SimpleForm editable="true" layout="ResponsiveGridLayout" title="Item Details">
                     <f:content>
-                        <Label text="Material Description" required="true"/>
-                        <Input value="{form>/materialName}" placeholder="e.g., Custom Office Desk"/>
+                        <Label text="Material" required="true" />
+
+                        <!-- OPTION A: CATALOG MODE (ComboBox) -->
+                        <ComboBox 
+                            id="materialCombo"
+                            visible="{= !${viewModel>/isManual} }"
+                            items="{
+                                path: '/Materials',
+                                sorter: { path: 'description' }
+                            }"
+                            selectionChange=".onMaterialSelect"
+                            placeholder="Select item from catalog...">
+                            <core:Item key="{ID}" text="{description} ({ID})" />
+                        </ComboBox>
+
+                        <!-- OPTION B: MANUAL MODE (Free Text) -->
+                        <Input 
+                            id="manualInput"
+                            visible="{viewModel>/isManual}"
+                            value="{form>/materialName}"
+                            placeholder="e.g. Birthday Cake (Non-stock item)"
+                            liveChange=".onManualInputChange" />
                         
                         <Label text="Quantity" required="true"/>
                         <Input value="{form>/quantity}" type="Number" placeholder="1"/>
                         
-                        <Label text="Estimated Price" required="true"/>
-                        <Input value="{form>/price}" type="Number" placeholder="0.00" description="{view>/currencyCode}"/>
+                        <Label text="Price" required="true"/>
+                        <Input id="priceInput" value="{form>/price}" type="Number" placeholder="0.00" description="{view>/currencyCode}"/>
                         
 
 

@@ -15,12 +15,18 @@ sap.ui.define([
 
             onPressCatalog: function () {
                 var oRouter = UIComponent.getRouterFor(this);
-                oRouter.navTo("RouteVendorSelection");
+                // Navigate to the same view ("RouteManualPR") but pass mode="catalog"
+                oRouter.navTo("RouteManualPR", {
+                    mode: "catalog"
+                });
             },
 
             onPressManual: function () {
                 var oRouter = UIComponent.getRouterFor(this);
-                oRouter.navTo("RouteManualPR");
+                // Navigate to the same view ("RouteManualPR") but pass mode="manual"
+                oRouter.navTo("RouteManualPR", {
+                    mode: "manual"
+                });
             },
 
             onPressHistory: function () {
