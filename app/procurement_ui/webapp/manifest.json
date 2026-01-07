@@ -110,7 +110,7 @@
                 },
                 {
                     "name": "RouteManualPR",
-                    "pattern": "manualPR/{mode}",
+                    "pattern": "manualPR",
                     "target": [
                         "TargetManualPR"
                     ]
