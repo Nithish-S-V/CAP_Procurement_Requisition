@@ -13,35 +13,30 @@ sap.ui.define([
 
         return Controller.extend("com.procurement.ui.controller.ManualPR", {
             onInit: function () {
-                var oRouter = UIComponent.getRouterFor(this);
-                // We need to listen to the route match to capture arguments
-                oRouter.getRoute("RouteManualPR").attachPatternMatched(this._onObjectMatched, this);
-
                 var oViewModel = new JSONModel({
-                    currencyCode: "USD",
-                    isManual: true, // Default
+                    procurementMode: "catalog",
+                    quantity: 1,
+                    price: 0.00,
+                    currency: "USD",
+                    manualDescription: "",
+                    selectedVendorID: "",
                     selectedMaterialID: null
                 });
-                this.getView().setModel(oViewModel, "viewModel"); // Changed from "view" to match XML usage
-
-                var oFormModel = new JSONModel({
-                    materialName: "",
-                    quantity: 1,
-                    price: null,
-                    vendor: ""
-                });
-                this.getView().setModel(oFormModel, "form");
+                this.getView().setModel(oViewModel, "view");
             },
 
-            _onObjectMatched: function (oEvent) {
-                var oArgs = oEvent.getParameter("arguments");
-                var sMode = oArgs.mode || "manual"; // Default to manual if not provided
+            onModeChange: function (oEvent) {
+                var sKey = oEvent.getParameter("item").getKey();
+                var oModel = this.getView().getModel("view");
 
-                var oViewModel = this.getView().getModel("viewModel");
-                oViewModel.setProperty("/isManual", sMode === "manual");
+                // Reset fields
+                oModel.setProperty("/price", 0.00);
+                oModel.setProperty("/manualDescription", "");
+                oModel.setProperty("/selectedVendorID", "");
+                oModel.setProperty("/selectedMaterialID", null);
 
-                // Reset form on entry
-                this._resetForm();
+                var oCombo = this.byId("materialCombo");
+                if (oCombo) oCombo.setSelectedKey(null);
             },
 
             onMaterialSelect: function (oEvent) {
@@ -49,14 +44,9 @@ sap.ui.define([
                 if (!oItem) return;
 
                 var oContext = oItem.getBindingContext();
-                // We need to request the object if using OData V4 list binding, 
-                // but ComboBox list binding usually loads data. 
-                // Let's assume standard synchronous access or promise if V4 context.
-
-                // V4 Context:
+                // We handle V4 or standard context
                 var oData = oContext.getObject();
 
-                // If getObject() returns undefined (V4 sometimes), we might need requestObject().
                 if (!oData) {
                     oContext.requestObject().then(function (oObj) {
                         this._fillCatalogItem(oObj);
@@ -67,29 +57,14 @@ sap.ui.define([
             },
 
             _fillCatalogItem: function (oData) {
-                var oFormModel = this.getView().getModel("form");
-                var oViewModel = this.getView().getModel("viewModel");
+                var oModel = this.getView().getModel("view");
 
-                // Update Form
-                oFormModel.setProperty("/materialName", oData.description);
+                // Auto-fill Price (Simulation: 100 per unit for demo, or read from map)
+                oModel.setProperty("/price", 100.00);
+                oModel.setProperty("/selectedMaterialID", oData.ID);
 
-                // Auto-fill and lock price (assuming some standard price exists, else default)
-                // Schema for 'Materials' doesn't have price. 
-                // Let's assume a default or fetch from Catalog tables if linked.
-                // For now, allow edit or set dummy.
-                oFormModel.setProperty("/price", 100.00); // Dummy default for catalog
-
-                this.byId("priceInput").setEditable(false);
-
-                oViewModel.setProperty("/selectedMaterialID", oData.ID);
-            },
-
-            onManualInputChange: function (oEvent) {
-                var sText = oEvent.getParameter("value");
-                var oViewModel = this.getView().getModel("viewModel");
-
-                this.byId("priceInput").setEditable(true);
-                oViewModel.setProperty("/selectedMaterialID", null);
+                // Optional: Auto-select vendor if linked
+                // if (oData.supplier_ID) oModel.setProperty("/selectedVendorID", oData.supplier_ID);
             },
 
             onNavBack: function () {
@@ -105,13 +80,25 @@ sap.ui.define([
             },
 
             onAddToRequest: function () {
-                var oFormModel = this.getView().getModel("form");
-                var oViewModel = this.getView().getModel("viewModel");
-                var oData = oFormModel.getData();
+                var oModel = this.getView().getModel("view");
+                var sMode = oModel.getProperty("/procurementMode");
+                var sMaterialID = oModel.getProperty("/selectedMaterialID");
+                var sManualDesc = oModel.getProperty("/manualDescription");
+                var fPrice = oModel.getProperty("/price");
+                var iQty = oModel.getProperty("/quantity");
+                var sVendor = oModel.getProperty("/selectedVendorID");
 
-                // Validate
-                if (!oData.materialName || !oData.quantity || !oData.price) {
-                    MessageToast.show("Please fill in all required fields.");
+                // Validation
+                if (sMode === 'catalog' && !sMaterialID) {
+                    MessageToast.show("Please select a material.");
+                    return;
+                }
+                if (sMode === 'manual' && !sManualDesc) {
+                    MessageToast.show("Please enter a description.");
+                    return;
+                }
+                if (!iQty || iQty <= 0) {
+                    MessageToast.show("Quantity must be greater than 0.");
                     return;
                 }
 
@@ -121,20 +108,34 @@ sap.ui.define([
                 }
 
                 var aItems = oCartModel.getProperty("/items") || [];
-                var sMaterialID = oViewModel.getProperty("/selectedMaterialID");
-                var bIsManual = oViewModel.getProperty("/isManual");
 
-                // Add to cart with new array ref
+                // Determine Description
+                var sDisplayDesc = sManualDesc;
+                if (sMode === 'catalog') {
+                    // We need the text from the combo or model. 
+                    // Let's assume we can lookup or just use the ID/Placeholder. 
+                    // Better: Get it from the Combo selected Item text or store it in _fillCatalogItem.
+                    // Implementation: Fetch text from control
+                    var oCombo = this.byId("materialCombo");
+                    if (oCombo && oCombo.getSelectedItem()) {
+                        sDisplayDesc = oCombo.getSelectedItem().getText();
+                    } else {
+                        // Fallback if combo not found or no item selected, use material ID
+                        sDisplayDesc = sMaterialID;
+                    }
+                }
+
+                // Add to cart
                 var aNewItems = aItems.concat([{
                     productId: sMaterialID ? sMaterialID : "MANUAL-" + Date.now(),
-                    productName: oData.materialName, // Maps to materialDescription
-                    description: (bIsManual ? "Manual Entry: " : "Catalog Item: ") + oData.materialName,
-                    price: parseFloat(oData.price),
-                    quantity: parseInt(oData.quantity),
+                    productName: sDisplayDesc,
+                    description: (sMode === 'manual' ? "Manual Entry: " : "Catalog Item: ") + sDisplayDesc,
+                    price: parseFloat(fPrice),
+                    quantity: parseInt(iQty),
                     costCenter: "",
-                    vendorId: oData.vendor || "33300002",
-                    type: bIsManual ? 'Manual' : 'Catalog',
-                    material_ID: sMaterialID // Store association ID
+                    vendorId: sVendor || "33300002",
+                    type: sMode === 'manual' ? 'Manual' : 'Catalog',
+                    material_ID: sMaterialID
                 }]);
 
                 oCartModel.setProperty("/items", aNewItems);
@@ -146,28 +147,15 @@ sap.ui.define([
                 });
                 oCartModel.setProperty("/total", fTotal.toFixed(2));
 
-                MessageToast.show("Added item to request.");
-                this._resetForm();
+                MessageToast.show("Item added to request!");
+
+                // Reset
+                // Trigger mode change logic to clear fields
+                this.onModeChange({ getParameter: () => ({ getKey: () => sMode }) });
+                oModel.setProperty("/quantity", 1);
             },
 
-            _resetForm: function () {
-                var oFormModel = this.getView().getModel("form");
-                var oViewModel = this.getView().getModel("viewModel");
-
-                oFormModel.setData({
-                    materialName: "",
-                    quantity: 1,
-                    price: null,
-                    vendor: ""
-                });
-
-                oViewModel.setProperty("/selectedMaterialID", null);
-
-                // Reset UI state
-                var oPriceInput = this.byId("priceInput");
-                if (oPriceInput) oPriceInput.setEditable(true);
-            },
-
+            // Unused but kept for safe measures or deleted
             onGoToCart: function () {
                 var oRouter = UIComponent.getRouterFor(this);
                 oRouter.navTo("RouteReview");

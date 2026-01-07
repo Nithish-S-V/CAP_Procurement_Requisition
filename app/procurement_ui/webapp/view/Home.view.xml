@@ -11,29 +11,15 @@
             <VBox class="sapUiSmallMargin">
                 <Title text="Choose your procurement method" level="H2" class="sapUiSmallMarginBottom"/>
                 <HBox alignItems="Center" justifyContent="Center" wrap="Wrap">
-                    <f:Card class="sapUiMediumMargin" width="300px" height="auto" press=".onPressCatalog" semanticRole="ListItem">
-                        <f:header>
-                            <card:Header title="Catalog Purchasing" subtitle="Browse vendor catalogs" iconSrc="sap-icon://cart"/>
-                        </f:header>
-                        <f:content>
-                            <VBox class="sapUiSmallMargin">
-                                <Text text="Use our AI assistant to find the best products from our approved vendors."/>
-                                <Button text="Go to Catalog" type="Emphasized" press=".onPressCatalog" class="sapUiSmallMarginTop" width="100%"/>
-                            </VBox>
-                        </f:content>
-                    </f:Card>
-
-                    <f:Card class="sapUiMediumMargin" width="300px" height="auto" press=".onPressManual" semanticRole="ListItem">
-                        <f:header>
-                            <card:Header title="Manual Procurement" subtitle="Free text requisition" iconSrc="sap-icon://form"/>
-                        </f:header>
-                        <f:content>
-                            <VBox class="sapUiSmallMargin">
-                                <Text text="Cannot find what you need? Create a manual requisition request."/>
-                                <Button text="Manual Entry" press=".onPressManual" class="sapUiSmallMarginTop" width="100%"/>
-                            </VBox>
-                        </f:content>
-                    </f:Card>
+                    <GenericTile 
+                        class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" 
+                        header="Create Request" 
+                        subheader="Catalog or Manual" 
+                        press=".onPressCreateRequest">
+                        <TileContent>
+                            <ImageContent src="sap-icon://create-form" />
+                        </TileContent>
+                    </GenericTile>
                 </HBox>
                 <HBox alignItems="Center" justifyContent="Center" wrap="Wrap" class="sapUiSmallMarginTop">
                     <f:Card class="sapUiMediumMargin" width="300px" height="auto" press=".onPressHistory" semanticRole="ListItem">

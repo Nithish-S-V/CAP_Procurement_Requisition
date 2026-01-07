@@ -7,55 +7,113 @@
     xmlns:core="sap.ui.core"
     displayBlock="true">
     <Page title="Manual Procurement Request" showNavButton="true" navButtonPress=".onNavBack">
-        <headerContent>
-             <Button icon="sap-icon://cart" text="{= ${cart>/items}.length }" press=".onGoToCart"/>
-        </headerContent>
+    <Page title="New Purchase Request" showNavButton="true" navButtonPress=".onNavBack">
         <content>
-            <VBox class="sapUiMediumMargin">
-                <f:SimpleForm editable="true" layout="ResponsiveGridLayout" title="Item Details">
-                    <f:content>
-                        <Label text="Material" required="true" />
+            <!-- 1. MODE SELECTION -->
+            <Panel width="auto" class="sapUiResponsiveMargin" accessibleRole="Region">
+                <headerToolbar>
+                    <Toolbar height="3rem">
+                        <Title text="Request Details" />
+                        <ToolbarSpacer />
+                        <!-- The Toggle Switch -->
+                        <SegmentedButton selectedKey="{view>/procurementMode}" selectionChange=".onModeChange">
+                            <items>
+                                <SegmentedButtonItem key="catalog" icon="sap-icon://cart" text="Catalog Item" />
+                                <SegmentedButtonItem key="manual" icon="sap-icon://edit" text="Free Text (Manual)" />
+                            </items>
+                        </SegmentedButton>
+                    </Toolbar>
+                </headerToolbar>
 
-                        <!-- OPTION A: CATALOG MODE (ComboBox) -->
-                        <ComboBox 
-                            id="materialCombo"
-                            visible="{= !${viewModel>/isManual} }"
-                            items="{
-                                path: '/Materials',
-                                sorter: { path: 'description' }
-                            }"
-                            selectionChange=".onMaterialSelect"
-                            placeholder="Select item from catalog...">
-                            <core:Item key="{ID}" text="{description} ({ID})" />
-                        </ComboBox>
-
-                        <!-- OPTION B: MANUAL MODE (Free Text) -->
-                        <Input 
-                            id="manualInput"
-                            visible="{viewModel>/isManual}"
-                            value="{form>/materialName}"
-                            placeholder="e.g. Birthday Cake (Non-stock item)"
-                            liveChange=".onManualInputChange" />
+                <content>
+                    <!-- 2. PROFESSIONAL FORM LAYOUT -->
+                    <f:SimpleForm 
+                        editable="true"
+                        layout="ResponsiveGridLayout"
+                        labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12"
+                        adjustLabelSpan="false"
+                        emptySpanXL="0" emptySpanL="0" emptySpanM="0" emptySpanS="0"
+                        columnsXL="2" columnsL="2" columnsM="1"
+                        singleContainerFullSize="false">
                         
-                        <Label text="Quantity" required="true"/>
-                        <Input value="{form>/quantity}" type="Number" placeholder="1"/>
-                        
-                        <Label text="Price" required="true"/>
-                        <Input id="priceInput" value="{form>/price}" type="Number" placeholder="0.00" description="{view>/currencyCode}"/>
-                        
+                        <f:content>
+                            
+                            <!-- MATERIAL SELECTION -->
+                            <Label text="Material" required="true" />
+                            
+                            <!-- A. Catalog Dropdown (Visible if Mode = catalog) -->
+                            <ComboBox 
+                                id="materialCombo"
+                                visible="{= ${view>/procurementMode} === 'catalog' }"
+                                items="{
+                                    path: '/Materials',
+                                    sorter: { path: 'description' }
+                                }"
+                                selectionChange=".onMaterialSelect"
+                                placeholder="Select from Catalog...">
+                                <core:Item key="{ID}" text="{description} ({ID})" />
+                            </ComboBox>
 
+                            <!-- B. Manual Input (Visible if Mode = manual) -->
+                            <Input 
+                                id="manualInput"
+                                visible="{= ${view>/procurementMode} === 'manual' }"
+                                value="{view>/manualDescription}"
+                                placeholder="Describe the item (e.g. Birthday Cake)" />
 
-                        <Label text="Preferred Vendor"/>
-                        <ComboBox value="{form>/vendor}" placeholder="Select or type vendor">
-                            <core:Item key="Vendor A" text="Vendor A"/>
-                            <core:Item key="Vendor B" text="Vendor B"/>
-                            <core:Item key="Other" text="Other"/>
-                        </ComboBox>
-                    </f:content>
-                </f:SimpleForm>
-                
-                <Button text="Add to Request" type="Emphasized" press=".onAddToRequest" class="sapUiMediumMarginTop"/>
-            </VBox>
+                            <!-- QUANTITY -->
+                            <Label text="Quantity" required="true" />
+                            <StepInput 
+                                value="{view>/quantity}" 
+                                min="1" 
+                                max="1000"
+                                width="50%" />
+
+                            <!-- PRICE -->
+                            <Label text="Estimated Price" />
+                            <Input 
+                                id="priceInput"
+                                value="{view>/price}" 
+                                description="{view>/currency}"
+                                editable="{= ${view>/procurementMode} === 'manual' }" 
+                                type="Number"
+                                placeholder="0.00" />
+
+                            <!-- VENDOR -->
+                            <Label text="Preferred Vendor" />
+                            <ComboBox 
+                                id="vendorCombo"
+                                selectedKey="{view>/selectedVendorID}"
+                                items="{
+                                    path: '/Suppliers',
+                                    sorter: { path: 'name' }
+                                }"
+                                placeholder="Select Supplier...">
+                                <core:Item key="{ID}" text="{name} - {city}" />
+                            </ComboBox>
+
+                            <!-- COST CENTER (Required for Manual) -->
+                            <Label text="Cost Center" required="{= ${view>/procurementMode} === 'manual' }" />
+                            <ComboBox 
+                                items="{/CostCenters}"
+                                visible="{= ${view>/procurementMode} === 'manual' }"
+                                placeholder="Select Cost Center">
+                                <core:Item key="{ID}" text="{description}" />
+                            </ComboBox>
+
+                        </f:content>
+                    </f:SimpleForm>
+                </content>
+            </Panel>
         </content>
+
+        <!-- 3. PROFESSIONAL FOOTER -->
+        <footer>
+            <OverflowToolbar>
+                <ToolbarSpacer />
+                <Button type="Reject" text="Cancel" press=".onNavBack" />
+                <Button type="Accept" text="Add to Request" press=".onAddToRequest" />
+            </OverflowToolbar>
+        </footer>
     </Page>
 </mvc:View>

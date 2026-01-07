@@ -13,20 +13,10 @@ sap.ui.define([
 
             },
 
-            onPressCatalog: function () {
+            onPressCreateRequest: function () {
                 var oRouter = UIComponent.getRouterFor(this);
-                // Navigate to the same view ("RouteManualPR") but pass mode="catalog"
-                oRouter.navTo("RouteManualPR", {
-                    mode: "catalog"
-                });
-            },
-
-            onPressManual: function () {
-                var oRouter = UIComponent.getRouterFor(this);
-                // Navigate to the same view ("RouteManualPR") but pass mode="manual"
-                oRouter.navTo("RouteManualPR", {
-                    mode: "manual"
-                });
+                // Navigate to the "Unified" Create Request view
+                oRouter.navTo("RouteManualPR");
             },
 
             onPressHistory: function () {
