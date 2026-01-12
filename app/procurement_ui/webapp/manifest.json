@@ -36,7 +36,7 @@
         }
     },
     "sap.ui5": {
-        "flexEnabled": true,
+        "flexEnabled": false,
         "dependencies": {
             "minUI5Version": "1.108.0",
             "libs": {
@@ -142,6 +142,13 @@
                     "target": [
                         "TargetManagerApprovals"
                     ]
+                },
+                {
+                    "name": "RouteAdmin",
+                    "pattern": "admin",
+                    "target": [
+                        "TargetAdmin"
+                    ]
                 }
             ],
             "targets": {
@@ -200,6 +207,13 @@
                     "clearControlAggregation": false,
                     "viewId": "ManagerApprovals",
                     "viewName": "ManagerApprovals"
+                },
+                "TargetAdmin": {
+                    "viewType": "XML",
+                    "transition": "slide",
+                    "clearControlAggregation": false,
+                    "viewId": "Admin",
+                    "viewName": "Admin"
                 }
             }
         },
